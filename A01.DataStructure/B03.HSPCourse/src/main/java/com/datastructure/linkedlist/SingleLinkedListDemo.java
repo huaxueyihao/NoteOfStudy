@@ -17,7 +17,14 @@ public class SingleLinkedListDemo {
         list.addByOrder(hero4);
 
 
+        System.out.println("反转之前");
         list.list();
+
+        SingleLinkedList.reversetList(list.getHead());
+
+        System.out.println("反转之后");
+        list.list();
+
 
     }
 
@@ -156,6 +163,69 @@ class SingleLinkedList {
     }
 
 
+    public static HeroNode findLastIndexNode(HeroNode head, int index) {
+        // 判断
+        if (head.next == null) {
+            return null;
+        }
+
+        int size = getLength(head);
+
+        if (index <= 0 || index > size) {
+            return null;
+        }
+
+        HeroNode cur = head.next;
+        for (int i = 0; i < size - index; i++) {
+            cur = cur.next;
+        }
+        return cur;
+    }
+
+    // 将单链表反转
+    public static void reversetList(HeroNode head) {
+
+        if (head.next == null || head.next.next == null) {
+            return;
+        }
+
+        HeroNode cur = head.next;
+        HeroNode next = null; // 指向当前结点
+
+        HeroNode reverseHead = new HeroNode(0, "", "");
+
+
+        while (cur != null) {
+            next = cur.next;
+            cur.next = reverseHead.next; // 将cur的下一个节点指向新链表的最前端
+            reverseHead.next = cur;
+            cur = next;// 让cur后移
+        }
+
+        // 将head.next指向reverseHead.next
+        head.next = reverseHead.next;
+        reverseHead.next = null;
+
+    }
+
+
+    public static int getLength(HeroNode head) {
+        if (head.next == null) {
+            return 0;
+        }
+        int length = 0;
+        HeroNode cur = head.next;
+        while (cur != null) {
+            length++;
+            cur = cur.next; // 遍历
+        }
+        return length;
+    }
+
+
+    public HeroNode getHead() {
+        return head;
+    }
 }
 
 // 定义HeroNode，每个HeroNode对象就是一个节点
