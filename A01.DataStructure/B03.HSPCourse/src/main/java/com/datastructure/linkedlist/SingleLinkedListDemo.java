@@ -1,5 +1,7 @@
 package com.datastructure.linkedlist;
 
+import java.util.Stack;
+
 public class SingleLinkedListDemo {
 
     public static void main(String[] args) {
@@ -17,13 +19,15 @@ public class SingleLinkedListDemo {
         list.addByOrder(hero4);
 
 
-        System.out.println("反转之前");
-        list.list();
+//        System.out.println("反转之前");
+//        list.list();
+//
+//        SingleLinkedList.reversetList(list.getHead());
+//
+//        System.out.println("反转之后");
+//        list.list();
 
-        SingleLinkedList.reversetList(list.getHead());
-
-        System.out.println("反转之后");
-        list.list();
+        SingleLinkedList.reversePrint(list.getHead());
 
 
     }
@@ -205,6 +209,28 @@ class SingleLinkedList {
         // 将head.next指向reverseHead.next
         head.next = reverseHead.next;
         reverseHead.next = null;
+
+    }
+
+    public static void reversePrint(HeroNode head){
+        if(head.next == null){
+            return;
+        }
+
+        Stack<HeroNode> stack = new Stack<HeroNode>();
+
+        HeroNode cur = head.next;
+
+        // 将链表的所有节点压入
+        while (cur != null){
+            stack.push(cur);
+            cur = cur.next;
+        }
+
+        while (stack.size() > 0){
+            System.out.println(stack.pop());
+        }
+
 
     }
 
