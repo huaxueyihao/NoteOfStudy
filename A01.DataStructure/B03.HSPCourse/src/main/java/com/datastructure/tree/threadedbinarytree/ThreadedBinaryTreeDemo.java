@@ -1,65 +1,53 @@
-package com.datastructure.tree;
+package com.datastructure.tree.threadedbinarytree;
 
-public class BinaryTreeDemo {
-
+public class ThreadedBinaryTreeDemo {
 
     public static void main(String[] args) {
 
+        // 测试一把中序线索二叉树的功能
+        HeroNode root = new HeroNode(1, "tom");
+        HeroNode node2 = new HeroNode(3, "jack");
+        HeroNode node3 = new HeroNode(6, "smith");
+        HeroNode node4 = new HeroNode(8, "mary");
+        HeroNode node5 = new HeroNode(10, "king");
+        HeroNode node6 = new HeroNode(14, "dim");
 
-        BinaryTree binaryTree = new BinaryTree();
-
-        HeroNode root = new HeroNode(1, "宋江");
-        HeroNode node2 = new HeroNode(2, "吴用");
-        HeroNode node3 = new HeroNode(3, "卢俊义");
-        HeroNode node4 = new HeroNode(4, "林冲");
-        HeroNode node5 = new HeroNode(5, "关胜");
-
-
-        // 说明，先手动穿件二叉树
+        // 二叉树，后面我们要递归创建，现在简单处理使用手工创建
         root.setLeft(node2);
         root.setRight(node3);
 
-        node3.setRight(node4);
-        node3.setLeft(node5);
+        node2.setLeft(node4);
+        node2.setRight(node5);
 
-        binaryTree.setRoot(root);
+        node3.setLeft(node6);
 
-        // 前序遍历
-        // 1,2,3,4
-//        System.out.println("前序遍历");
-//        binaryTree.preOrder();
-//        System.out.println();
-//
-//        // 2,1,3,4
-//        System.out.println("中序遍历");
-//        binaryTree.infixOrder();
-//        System.out.println();
-//
-//        // 2,4,3,1
-//        System.out.println("后序遍历");
-//        binaryTree.postOrder();
+        ThreadedBinaryTree threadedBinaryTree = new ThreadedBinaryTree();
+        threadedBinaryTree.setRoot(root);
 
-        HeroNode resNode = binaryTree.preOrderSearch(15);
-        if (resNode != null) {
-            System.out.printf("找到了，信息为no=%d name=%s\n", resNode.getNo(), resNode.getName());
-        } else {
-            System.out.printf("没有找到no=%d\n", 15);
-        }
+        threadedBinaryTree.threadedNodes();
 
+        HeroNode leftNode = node5.getLeft();
+        System.out.println(leftNode);
+        HeroNode rightNode = node5.getRight();
+
+        System.out.println(rightNode);
+
+        System.out.println("中序线索化的遍历");
+
+        threadedBinaryTree.threadedList();
 
     }
+
+
 }
 
-// 定义BinaryTree
-class BinaryTree {
 
-
+class ThreadedBinaryTree {
     private HeroNode root;
 
-//    public BinaryTree(HeroNode root) {
-//        this.root = root;
-//    }
-
+    // 为了实现线索化，需要穿件要给指向当前结点的前驱结点的指针
+    // 在递归进行线索化时，pre总是保留前一个结点
+    private HeroNode pre = null;
 
     public HeroNode getRoot() {
         return root;
@@ -69,78 +57,84 @@ class BinaryTree {
         this.root = root;
     }
 
-    public void delNode(int no) {
-        if (root != null) {
-            if (root.getNo() == no) {
-                root = null;
-            } else {
-                root.delNode(no);
+    public void threadedNodes() {
+        this.threadedNodes(root);
+    }
+
+
+    // 遍历线索化二叉树的方法
+    public void threadedList(){
+        // 定义一个变脸个，存储当期那遍历的结点，从root开始
+        HeroNode node = root;
+
+        while (node != null){
+            // 循环的找到leftTyoe == 1的节点，第一个找到就是8结点
+            // 后面随着遍历而变化，因为leftType== 1时，说明该结点是按照线索化的
+
+            while (node.getLeftType() == 0){
+                node = node.getLeft();
             }
-        } else {
-            System.out.println("空树，不能删除");
+
+
+            System.out.println(node);
+            // 如果当前结点的右指针指向的是后继结点，就一直输出
+            while (node.getRightType() == 1){
+                // 获取当前结点的后继结点
+                node = node.getRight();
+                System.out.println(node);
+            }
+
+            node = node.getRight();
+
         }
+
+
     }
 
-    // 前序遍历
-    public void preOrder() {
-        if (this.root != null) {
-            this.root.preOrder();
-        } else {
-            System.out.println("二叉树为空，无法遍历");
+    /**
+     * 编写对二叉树进行中序线索化的方法
+     *
+     * @param node
+     */
+    public void threadedNodes(HeroNode node) {
+
+        if (node == null) {
+            return;
         }
-    }
 
-    // 中序遍历
-    public void infixOrder() {
-        if (this.root != null) {
-            this.root.infixOrder();
-        } else {
-            System.out.println("二叉树为空，无法遍历");
+        // (一)先线索化左子树
+        threadedNodes(node.getLeft());
+        // (二)线索化当前结点
+
+        // 处理当前结点的前驱结点
+        if (node.getLeft() == null) {
+            // 让当前结点的左指针指向前驱结点
+            node.setLeft(pre);
+            // 修改当前结点的左指针的类型,指向前驱结点
+            node.setLeftType(1);
         }
-    }
-
-
-    // 后续 遍历
-    public void postOrder() {
-        if (this.root != null) {
-            this.root.postOrder();
-        } else {
-            System.out.println("二叉树为空，无法遍历");
+        // 处理后继节点
+        if (pre != null && pre.getRight() == null) {
+            // 让前驱结点的右指针指向当前结点
+            pre.setRight(node);
+            // 修改前驱及诶单的右指针类型
+            pre.setRightType(1);
         }
+
+        // 没处理一个结点后，让当前结点是下一个结点的前驱结点
+        pre = node;
+
+
+
+        // (三)线索化右子树
+        threadedNodes(node.getRight());
+
+
     }
-
-
-    public HeroNode preOrderSearch(int no) {
-        if (this.root != null) {
-            return this.root.preOrderSearch(no);
-        } else {
-            System.out.println("二叉树为空，无法遍历");
-            return null;
-        }
-    }
-
-    public HeroNode infixOrderSearch(int no) {
-        if (this.root != null) {
-            return this.root.infixOrderSearch(no);
-        } else {
-            System.out.println("二叉树为空，无法遍历");
-            return null;
-        }
-    }
-
-    public HeroNode postOrderSearch(int no) {
-        if (this.root != null) {
-            return this.root.postOrderSearch(no);
-        } else {
-            System.out.println("二叉树为空，无法遍历");
-            return null;
-        }
-    }
-
-
 }
 
 
+// 创建HeroNode
 // 创建HeroNode 节点
 class HeroNode {
 
@@ -148,6 +142,12 @@ class HeroNode {
     private String name;
     private HeroNode left;
     private HeroNode right;
+
+    // 1.leftType == 0表示指向的是左子树，如果1则表示指向前驱结点
+    // 2.rightType ==0 表示指向是右子树，如果1表示后继及诶点
+    private int leftType;
+    private int rightType;
+
 
     public HeroNode(int no, String name) {
         this.no = no;
@@ -184,6 +184,22 @@ class HeroNode {
 
     public void setRight(HeroNode right) {
         this.right = right;
+    }
+
+    public int getLeftType() {
+        return leftType;
+    }
+
+    public void setLeftType(int leftType) {
+        this.leftType = leftType;
+    }
+
+    public int getRightType() {
+        return rightType;
+    }
+
+    public void setRightType(int rightType) {
+        this.rightType = rightType;
     }
 
     @Override
@@ -343,6 +359,3 @@ class HeroNode {
     }
 
 }
-
-
-//
