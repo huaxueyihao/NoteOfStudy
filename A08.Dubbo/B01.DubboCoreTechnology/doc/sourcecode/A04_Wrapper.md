@@ -72,12 +72,12 @@ private static final Wrapper OBJECT_WRAPPER = new Wrapper() {
 
 #### 2 Wrapper#getWrapper
 
-> 
+> 这个方法是获得已经动态生成的Wrapper子类。
 
 ```
 
 public static Wrapper getWrapper(Class<?> c) {
-    // c是否是动态生成的类，如果是，while循环知道找到其父类不是动态生成的类
+    // c是否是动态生成的类，如果是，while循环直到找到其父类不是动态生成的类
     while (ClassGenerator.isDynamicClass(c)) // can not wrapper on dynamic class.
     {
         c = c.getSuperclass();
@@ -105,6 +105,7 @@ public static Wrapper getWrapper(Class<?> c) {
 
 ##### 2.1 GreettingService的包装类Wrapper1
 
+> 一个动态生成的Wrapper1：GreettingService的包装类
 
 ```
 
@@ -185,6 +186,7 @@ implements ClassGenerator.DC {
         throw new NoSuchPropertyException(new StringBuffer().append("Not found property \"").append(string).append("\" field or setter method in class com.books.dubbo.demo.provider.GreettingServiceImpl.").toString());
     }
 
+    // 在AbstractProxyInvoker#doInvoker中调用的方法就是这个方法
     // 这个方法最后调用的就是GreettingServiceImpl的方法
     public Object invokeMethod(Object object, String string, Class[] arrclass, Object[] arrobject) throws InvocationTargetException {
         GreettingServiceImpl greettingServiceImpl;
