@@ -245,6 +245,7 @@ public class Protocol$Adaptive implements Protocol {
         }
         URL uRL = invoker.getUrl();
         // 根据这里可以看出若是没有配置则是dubbo协议，不过我们在配置文件中配置的也是dubbo协议
+        // debug可以看到本地暴露的uRL.getProtocol()="injvm"，远程暴露uRL.getProtocol()="dubbo"
         String string2 = string = uRL.getProtocol() == null ? "dubbo" : uRL.getProtocol();
         if (string == null) {
             throw new IllegalStateException(new StringBuffer().append("Failed to get extension (org.apache.dubbo.rpc.Protocol) name from url (").append(uRL.toString()).append(") use keys([protocol])").toString());
@@ -262,6 +263,8 @@ public class Protocol$Adaptive implements Protocol {
 
 
 #### 4 DubboProtocol#export
+
+> 远程dubbo暴露服务
 
 ```
 
@@ -298,6 +301,21 @@ public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
     return exporter;
 }
 
+
+
+```
+
+
+#### 5 InjvmProtocol#export
+
+> 本地暴露的协议，直接创建一个InjvmExporter对象
+
+```
+
+@Override
+public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
+    return new InjvmExporter<T>(invoker, invoker.getUrl().getServiceKey(), exporterMap);
+}
 
 
 ```
