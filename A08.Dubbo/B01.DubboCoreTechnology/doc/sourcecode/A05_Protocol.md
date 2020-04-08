@@ -245,12 +245,14 @@ public class Protocol$Adaptive implements Protocol {
         }
         URL uRL = invoker.getUrl();
         // 根据这里可以看出若是没有配置则是dubbo协议，不过我们在配置文件中配置的也是dubbo协议
-        // debug可以看到本地暴露的uRL.getProtocol()="injvm"，远程暴露uRL.getProtocol()="dubbo"
+        // debug可以看到本地暴露的uRL.getProtocol()="injvm"，
+        // 远程暴露服务又分了两个情况，一个registry,一个是dubbo
+        // 一般会走registry，即是向zk上注册的协议
         String string2 = string = uRL.getProtocol() == null ? "dubbo" : uRL.getProtocol();
         if (string == null) {
             throw new IllegalStateException(new StringBuffer().append("Failed to get extension (org.apache.dubbo.rpc.Protocol) name from url (").append(uRL.toString()).append(") use keys([protocol])").toString());
         }
-        // 所以这里的protocol就是DubboProtocol
+        // 所以本地服务InjvmProtocol，远程注册的协议是RegistryProtocol
         Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(string);
         return protocol.export(invoker);
     }
@@ -317,6 +319,58 @@ public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
 public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
     return new InjvmExporter<T>(invoker, invoker.getUrl().getServiceKey(), exporterMap);
 }
+
+
+```
+
+
+
+#### 6 RegistryProtocol#export
+
+> 注册到zk上的协议，这个涉及内容比较多，后面单独分析
+
+```
+
+public <T> Exporter<T> export(final Invoker<T> originInvoker) throws RpcException {
+    URL registryUrl = getRegistryUrl(originInvoker);
+    // url to export locally
+    URL providerUrl = getProviderUrl(originInvoker);
+
+    // Subscribe the override data
+    // FIXME When the provider subscribes, it will affect the scene : a certain JVM exposes the service and call
+    //  the same service. Because the subscribed is cached key with the name of the service, it causes the
+    //  subscription information to cover.
+    final URL overrideSubscribeUrl = getSubscribedOverrideUrl(providerUrl);
+    final OverrideListener overrideSubscribeListener = new OverrideListener(overrideSubscribeUrl, originInvoker);
+    overrideListeners.put(overrideSubscribeUrl, overrideSubscribeListener);
+
+    providerUrl = overrideUrlWithConfig(providerUrl, overrideSubscribeListener);
+    //export invoker
+    final ExporterChangeableWrapper<T> exporter = doLocalExport(originInvoker, providerUrl);
+
+    // url to registry
+    final Registry registry = getRegistry(originInvoker);
+    final URL registeredProviderUrl = getRegisteredProviderUrl(providerUrl, registryUrl);
+    ProviderInvokerWrapper<T> providerInvokerWrapper = ProviderConsumerRegTable.registerProvider(originInvoker,
+            registryUrl, registeredProviderUrl);
+    //to judge if we need to delay publish
+    boolean register = registeredProviderUrl.getParameter("register", true);
+    if (register) {
+        register(registryUrl, registeredProviderUrl);
+        providerInvokerWrapper.setReg(true);
+    }
+
+    // Deprecated! Subscribe to override rules in 2.6.x or before.
+    registry.subscribe(overrideSubscribeUrl, overrideSubscribeListener);
+
+    exporter.setRegisterUrl(registeredProviderUrl);
+    exporter.setSubscribeUrl(overrideSubscribeUrl);
+    //Ensure that a new exporter instance is returned every time export
+    return new DestroyableExporter<>(exporter);
+}
+
+
+
 
 
 ```
