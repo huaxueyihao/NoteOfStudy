@@ -420,15 +420,17 @@ private void doExportUrlsFor1Protocol(ProtocolConfig protocolConfig, List<URL> r
                     // 代码和本地暴露基本差不多
                     Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, registryURL.addParameterAndEncoded(Constants.EXPORT_KEY, url.toFullString()));
                     // 这里和本地暴露就是多了这行代码，也就是Invoker被DelegateProviderMetaDataInvoker包装了一次，DelegateProviderMetaDataInvoker持有了ServiceConfig(元数据)引用
+                    
                     DelegateProviderMetaDataInvoker wrapperInvoker = new DelegateProviderMetaDataInvoker(invoker, this);
-
+                    // 这里的protocol，最终使用的是RegistryProtocol
                     Exporter<?> exporter = protocol.export(wrapperInvoker);
                     exporters.add(exporter);
                 }
             } else {
+              
                 Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, url);
                 DelegateProviderMetaDataInvoker wrapperInvoker = new DelegateProviderMetaDataInvoker(invoker, this);
-
+                // 这里的protocol，最终使用的是DubboProtocol
                 Exporter<?> exporter = protocol.export(wrapperInvoker);
                 exporters.add(exporter);
             }
