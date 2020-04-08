@@ -296,6 +296,7 @@ public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
 
     // 这里是启动服务，这里后面再讲
     openServer(url);
+    // 选择序列化组件
     optimizeSerialization(url);
 
     return exporter;
