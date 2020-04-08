@@ -201,15 +201,18 @@ public class Protocol$Adaptive implements Protocol {
             throw new IllegalArgumentException("org.apache.dubbo.rpc.Invoker argument getUrl() == null");
         }
         URL uRL = invoker.getUrl();
+        
         // 根据这里可以看出若是没有配置则是dubbo协议，不过我们在配置文件中配置的也是dubbo协议
-        // debug可以看到本地暴露的uRL.getProtocol()="injvm"，远程暴露uRL.getProtocol()="dubbo"
+        // debug可以看到本地暴露的uRL.getProtocol()="injvm"，
+        // 远程暴露服务又分了两个情况，一个registry,一个是dubbo
+        // 一般会走registry，即是向zk上注册的协议
         String string2 = string = uRL.getProtocol() == null ? "dubbo" : uRL.getProtocol();
         if (string == null) {
             throw new IllegalStateException(new StringBuffer().append("Failed to get extension (org.apache.dubbo.rpc.Protocol) name from url (").append(uRL.toString()).append(") use keys([protocol])").toString());
         }
-        // 所以这里的protocol就是DubboProtocol
+        // 所以本地服务InjvmProtocol，远程注册的协议是RegistryProtocol
         // 接下来 我们就是来分析这个getExtension(string)方法，这个方法就是文中三个包装类的包装过程的入口
-        // 这里的protocol其实是包装后的结果，也就是文中的三个Wrapper中的一个QosProtocolWrapper
+        // 这里的protocol其实是包装后的结果，
         Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(string);
         return protocol.export(invoker);
     }
