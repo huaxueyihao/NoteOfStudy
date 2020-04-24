@@ -78,7 +78,7 @@ public void register(URL registryUrl, URL registeredProviderUrl) {
 
 ```
 
-#### 2.1 AbstractRegistryFactory#getRegistry
+##### 2.1 AbstractRegistryFactory#getRegistry
 
 
 ```
@@ -124,5 +124,71 @@ public Registry createRegistry(URL url) {
 
 ```
 
+
+##### 2.2 RegistryProtocol#refer
+
+> 这个方法是消费方创建代理类的使用调用的方法，获得Invoker对象
+
+
+```
+
+
+public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
+    url = URLBuilder.from(url)
+            .setProtocol(url.getParameter(REGISTRY_KEY, DEFAULT_REGISTRY))
+            .removeParameter(REGISTRY_KEY)
+            .build();
+    // 获得注册器
+    Registry registry = registryFactory.getRegistry(url);
+    if (RegistryService.class.equals(type)) {
+        return proxyFactory.getInvoker((T) registry, type, url);
+    }
+
+    // group="a,b" or group="*"
+    Map<String, String> qs = StringUtils.parseQueryString(url.getParameterAndDecoded(REFER_KEY));
+    String group = qs.get(Constants.GROUP_KEY);
+    if (group != null && group.length() > 0) {
+        if ((COMMA_SPLIT_PATTERN.split(group)).length > 1 || "*".equals(group)) {
+            return doRefer(getMergeableCluster(), registry, type, url);
+        }
+    }
+    return doRefer(cluster, registry, type, url);
+}
+
+
+
+
+private <T> Invoker<T> doRefer(Cluster cluster, Registry registry, Class<T> type, URL url) {
+    RegistryDirectory<T> directory = new RegistryDirectory<T>(type, url);
+    directory.setRegistry(registry);
+    directory.setProtocol(protocol);
+    // all attributes of REFER_KEY 
+    Map<String, String> parameters = new HashMap<String, String>(directory.getUrl().getParameters());
+    URL subscribeUrl = new URL(CONSUMER_PROTOCOL, parameters.remove(REGISTER_IP_KEY), 0, type.getName(), parameters);
+    if (!ANY_VALUE.equals(url.getServiceInterface()) && url.getParameter(REGISTER_KEY, true)) {
+        directory.setRegisteredConsumerUrl(getRegisteredConsumerUrl(subscribeUrl, url));
+        // 把消费者注册到zk上
+        registry.register(directory.getRegisteredConsumerUrl());
+    }
+
+    // 建立路由规则链
+    directory.buildRouterChain(subscribeUrl);
+    // 订阅服务提供者地址
+    // 向服务中心订阅服务提供者地址
+    // 这个过程完成了Url转Invoker的过程
+    directory.subscribe(subscribeUrl.addParameter(CATEGORY_KEY,
+            PROVIDERS_CATEGORY + "," + CONFIGURATORS_CATEGORY + "," + ROUTERS_CATEGORY));
+
+    // 包装机器容错策略到invoker
+    // 获得Invoker，使用集群容错策略对Invoker进行装饰
+    // 选择集群容错策略，将RegistryDirectory绑定到到Invoker上
+    Invoker invoker = cluster.join(directory);
+    ProviderConsumerRegTable.registerConsumer(invoker, url, subscribeUrl, directory);
+    // 这里返回的invoker
+    return invoker;
+}
+
+
+```
 
 
