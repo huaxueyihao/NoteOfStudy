@@ -2,7 +2,7 @@
 
 #### 1 简介
 
->  通用占位符解析器
+>  通用占位符解析器：不仅仅用于PropertyParser的默认值解析，还会用于后面的动态SQL语句的解析。
 
 
 
@@ -95,9 +95,6 @@ public class GenericTokenParser {
     return builder.toString();
   }
 }
-
-
-
 
 
 ```
