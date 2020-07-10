@@ -17,5 +17,4 @@ public class Payment {
     private String serial;
 
 
-
 }

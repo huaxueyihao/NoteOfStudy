@@ -13,11 +13,16 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!--链路监控包含sleuth+zipkin-->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
+        <!--链路监控包含sleuth+zipkin-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-zipkin</artifactId>-->
+<!--        </dependency>-->
         <!--web启动器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,17 +72,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--引入自己的API通用包,可以使用Payment支付Entity-->
-<!--        <dependency>-->
-<!--            <groupId>com.atguigu.springcloud</groupId>-->
-<!--            <artifactId>cloud-api-commons</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+
         <!--Eureka客户端-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
