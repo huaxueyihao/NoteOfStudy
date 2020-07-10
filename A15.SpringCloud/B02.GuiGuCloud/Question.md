@@ -13,3 +13,17 @@ dependencies
 
 
 ```
+
+> Q2.RunDashboard配置
+
+```
+在当前项目的.idea的文件中workspacex.xml中的<component name="RunDashboard">内添加如下内容
+
+<option name="configurationTypes">
+  <set>
+    <option value="SpringBootApplicationConfigurationType"/>
+  </set>
+</option>
+
+
+```

@@ -7,6 +7,12 @@
   <groupId>com.atguigu.springcloud</groupId>
   <artifactId>B02.GuiGuCloud</artifactId>
   <version>1.0-SNAPSHOT</version>
+
+  <modules>
+    <module>cloud-provider-payment8001</module>
+    <module>cloud-consumer-order80</module>
+  </modules>
+
   <packaging>pom</packaging>
 
 
@@ -89,5 +95,22 @@
   </dependencyManagement>
 
 
+  <build>
+    <finalName>cloud2020</finalName>
+    <plugins>
+
+
+
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <fork>true</fork><!---->
+          <addResources>true</addResources><!---->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
