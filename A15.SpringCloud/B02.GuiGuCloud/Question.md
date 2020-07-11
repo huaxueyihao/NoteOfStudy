@@ -27,3 +27,10 @@ dependencies
 
 
 ```
+
+> Q3.健康检查的路径
+
+```
+http://localhost:8001/actuator/health
+
+```
