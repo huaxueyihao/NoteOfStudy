@@ -34,3 +34,31 @@ dependencies
 http://localhost:8001/actuator/health
 
 ```
+
+> Q4.zookeeper jar包冲突
+
+```
+
+
+排除
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+添加
+
+<dependency>
+    <groupId>org.apache.zookeeper</groupId>
+    <artifactId>zookeeper</artifactId>
+    <version>3.4.13</version>
+</dependency>
+
+
+```
