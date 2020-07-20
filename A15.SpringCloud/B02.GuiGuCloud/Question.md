@@ -62,3 +62,41 @@ http://localhost:8001/actuator/health
 
 
 ```
+
+
+> Q5: config-center 刷新问题
+
+```
+
+curl -X POST "http://localhost:3344/actuator/bus-refresh"
+
+```
+
+> Q6: rabbitmq启动
+
+```
+
+// 切换到MQ目录,注意你的安装版本可能不是3.7.4
+cd /usr/local/Cellar/rabbitmq/3.7.4/
+// 启用rabbitmq management插件
+sudo sbin/rabbitmq-plugins enable rabbitmq_management
+
+
+sudo vi /etc/profile
+//加入以下两行
+export RABBIT_HOME=/usr/local/Cellar/rabbitmq/3.7.4
+export PATH=$PATH:$RABBIT_HOME/sbin
+// 立即生效
+source /etc/profile
+ 
+
+// 后台启动
+rabbitmq-server -detached  
+// 查看状态
+rabbitmqctl status 
+// 访问可视化监控插件的界面
+// 浏览器内输入 http://localhost:15672,默认的用户名密码都是guest,登录后可以在Admin那一列菜单内添加自己的用户
+rabbitmqctl stop 关闭
+
+
+```
