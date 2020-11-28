@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -31,8 +32,6 @@ public class PaymentController {
     public CommonResult create(@RequestBody Payment payment) {
         int result = paymentService.create(payment);
         log.info("******插入结果：" + result);
-
-
         if (result > 0) {
             return new CommonResult(200, "插入数据库成功", serverPort, result);
         } else {
@@ -54,8 +53,6 @@ public class PaymentController {
 
     @GetMapping(value = "/payment/discovery")
     public Object discovery() {
-
-
         List<String> services = discoveryClient.getServices();
         for (String service : services) {
             log.info("*****element: " + service);
@@ -74,4 +71,21 @@ public class PaymentController {
     public String lb() {
         return serverPort;
     }
+
+
+
+    @GetMapping(value = "/payment/feign/timeout")
+    public String paymentFeignTimeout() {
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return serverPort;
+    }
+
+
+
+
+
 }
