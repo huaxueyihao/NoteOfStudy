@@ -17,6 +17,8 @@ import javax.xml.xpath.XPathFactory;
 public class XPathTest {
 
 
+
+
     public static void main(String[] args) throws Exception {
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -57,6 +59,14 @@ public class XPathTest {
         System.out.println("查询作者为Neal Stepenson的图书标题");
 
         NodeList nodes = (NodeList) result;
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            System.out.println(nodes.item(i).getNodeValue());
+        }
+
+        System.out.println("查询1997年之后的图书馆");
+
+        nodes = (NodeList) xPath.evaluate("//book[@year>1997]/@*|//book[@year>1997]/title/text()",doc,XPathConstants.NODESET);
 
         for (int i = 0; i < nodes.getLength(); i++) {
             System.out.println(nodes.item(i).getNodeValue());

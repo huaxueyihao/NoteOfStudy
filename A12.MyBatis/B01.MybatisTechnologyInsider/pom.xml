@@ -8,5 +8,12 @@
     <artifactId>B01.MybatisTechnologyInsider</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+    </dependencies>
 
 </project>
