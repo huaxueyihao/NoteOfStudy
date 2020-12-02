@@ -27,6 +27,27 @@ module.exports = {
                 },{
                     loader: 'less-loader'
                 }]
+            },
+            {
+                test:/\.(png|jpg|gif|jpeg)$/,
+                // css-loader，只负责加载
+                use: [{
+                    loader: 'url-loader',
+                    options:{
+                        limit: 8192,
+                        name: 'img/[name].[hash:8].[ext]'
+                    }
+                }]
+            },
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['es2015']
+                    }
+                }
             }
         ]
     }
