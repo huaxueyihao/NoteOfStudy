@@ -22,11 +22,18 @@ document.writeln('<h2>你好啊</h2>')
 
 // 5. 使用Vue进行开发
 import  Vue from 'vue';
+// import App from './vue/app';
+import App from './vue/App.vue';
+
+
 const app = new Vue({
     el: '#app',
-    data:{
-        message: 'Hello webpack'
+    template: `<App/>`,
+    components: {
+        App
     }
+
+
 })
 
 
