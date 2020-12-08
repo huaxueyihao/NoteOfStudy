@@ -57,6 +57,10 @@ cnpm install html-webpack-plugin@3.2.0 --save-dev
 
 cnpm install uglifyjs-webpack-plugin@1.1.1 --save-dev
 
+cnpm install webpack-dev-server@2.9.3 --save-dev
+
+cnpm install webpack-merge@4.1.5 --save-dev
+
 
 
 ```
