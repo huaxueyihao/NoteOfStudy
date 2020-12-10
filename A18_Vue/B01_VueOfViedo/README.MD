@@ -64,3 +64,33 @@ cnpm install webpack-merge@4.1.5 --save-dev
 
 
 ```
+
+> 安装Vue CLi
+
+```
+# 安装脚手架3
+cnpm install -g @vue/cli
+
+# 安装脚2.x的模板
+cnpm install -g @vue/cli-init
+
+#Vue CLI2初始化项目
+vue init webpack my-project
+
+#Vue CLi3初始化项目
+vue create my-project
+
+# runtimecompiler
+vue init webpack runtimecompiler
+
+# runtimeonly
+vue init webpack runtimeonly
+
+npm clean cache -force
+
+#vue-cli3
+vue create project_name
+
+
+```
+
