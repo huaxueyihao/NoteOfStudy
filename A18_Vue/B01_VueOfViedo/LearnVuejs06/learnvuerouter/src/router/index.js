@@ -1,9 +1,14 @@
 // 配置路由相关的信息
 import VueRouter from 'vue-router'
 import Vue from 'vue'
-import About from '../components/About'
-import Home from '../components/Home'
-import User from '../components/User'
+// import About from '../components/About'
+// import Home from '../components/Home'
+// import User from '../components/User'
+
+
+const User = () => import('../components/User')
+const Home = () => import('../components/Home')
+const About = () => import('../components/About')
 
 
 // 1.通过Vue.use(插件),安装插件
