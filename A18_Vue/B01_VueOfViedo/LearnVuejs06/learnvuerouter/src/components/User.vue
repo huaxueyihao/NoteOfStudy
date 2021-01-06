@@ -13,7 +13,15 @@ export default {
         userId(){
             return this.$route.params.userId
         }
-    }
+    },
+    created() {
+        console.log('User created');
+    },
+
+
+    deactivated(){
+        console.log('User deactivated');
+    },
 }
 </script>
 

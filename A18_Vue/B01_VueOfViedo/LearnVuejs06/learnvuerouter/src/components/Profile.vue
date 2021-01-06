@@ -11,7 +11,14 @@
 
 <script>
 export default {
-    name: "Profile"
+    name: "Profile",
+    created() {
+        console.log('Profile created');
+    },
+
+    deactivated(){
+        console.log('Profile deactivated');
+    },
 }
 </script>
 
