@@ -2,23 +2,27 @@
   <div id="app">
     <tab-bar>
       <tab-bar-item>
-        <img src="" alt=""/>
-        <div>首页</div>
+        <img slot="item-icon" src="" alt=""/>
+        <img slot="item-icon-active" src="" alt=""/>
+        <div slot="item-text">首页</div>
       </tab-bar-item>
 
       <tab-bar-item>
-        <img src="" alt=""/>
-        <div>首页</div>
+        <img slot="item-icon"  src="" alt=""/>
+        <img slot="item-icon-active" src="" alt=""/>
+        <div slot="item-text">首页</div>
       </tab-bar-item>
 
       <tab-bar-item>
-        <img src="" alt=""/>
-        <div>首页</div>
+        <img slot="item-icon"  src="" alt=""/>
+        <img slot="item-icon-active" src="" alt=""/>
+        <div slot="item-text">首页</div>
       </tab-bar-item>
 
       <tab-bar-item>
-        <img src="" alt=""/>
-        <div>首页</div>
+        <img slot="item-icon"  src="" alt=""/>
+        <img slot="item-icon-active" src="" alt=""/>
+        <div slot="item-text">首页</div>
       </tab-bar-item>
 
     </tab-bar>
@@ -34,7 +38,8 @@ import TabBarItem from './components/tabbar/TabBarItem.vue'
 export default {
   name: 'App',
   components: {
-    TabBar,TabBarItem
+    TabBar,
+    TabBarItem
   }
 }
 </script>

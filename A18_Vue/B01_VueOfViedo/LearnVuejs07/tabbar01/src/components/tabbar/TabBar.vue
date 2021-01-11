@@ -1,21 +1,6 @@
 <template>
     <div id="tab-bar">
-      <div class="tab-bar-item"> 
-          <img src="" alt="">
-          首页1
-      </div>
-      <div class="tab-bar-item"> 
-          <img src="" alt="">
-          首页2
-      </div>
-      <div class="tab-bar-item">
-          <img src="" alt="">
-          首页3
-      </div>
-      <div class="tab-bar-item">
-          <img src="" alt="">
-          首页4
-      </div>
+        <slot></slot>
     </div>
 </template>
 
