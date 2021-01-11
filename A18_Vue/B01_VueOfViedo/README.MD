@@ -91,6 +91,12 @@ npm clean cache -force
 #vue-cli3
 vue create project_name
 
+#安装路由
+cnpm install vue-router --save
+
+
+
+
 
 ```
 
