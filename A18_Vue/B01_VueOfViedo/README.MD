@@ -95,6 +95,9 @@ vue create project_name
 cnpm install vue-router --save
 
 
+## git指令完成关联
+git remote add origin https://github.com/coderwhy/testmail.git
+git push -u origin master
 
 
 
